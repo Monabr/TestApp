@@ -120,17 +120,6 @@ fun MainScreen() {
                                 BottomNavigationBar(
                                     innerNavController = innerNavController,
                                 )
-                                // ToDo: Место для рекламного баннера
-                                /*AndroidView(
-                                    modifier = Modifier.fillMaxWidth(),
-                                    factory = { context ->
-                                        AdView(context).apply {
-                                            adSize = adaptiveAdSize
-                                            adUnitId = "ca-app-pub-3181888734621775/2599603440"
-                                            loadAd(AdRequest.Builder().build())
-                                        }
-                                    }
-                                )*/
                             }
                         }
                     ) {
