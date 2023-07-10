@@ -4,18 +4,31 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.icons.Icons.Rounded
+import androidx.compose.material.icons.rounded.ArrowBack
 import androidx.compose.material3.Button
+import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.DrawerDefaults
 import androidx.compose.material3.DrawerValue.Closed
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
@@ -30,16 +43,17 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.testapp.ui.theme.TestAppTheme
-import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
 import com.example.testapp.material.ModalBottomSheetLayoutCustom
 import com.example.testapp.material.bottomSheet
 import com.example.testapp.material.rememberBottomSheetNavigatorCustom
+import com.example.testapp.ui.theme.TestAppTheme
+import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -60,7 +74,7 @@ class MainActivity : ComponentActivity() {
 
 @OptIn(
     ExperimentalMaterialNavigationApi::class, ExperimentalComposeUiApi::class, ExperimentalMaterialApi::class, ExperimentalFoundationApi::class,
-    com.example.testapp.material.ExperimentalMaterialNavigationApi::class
+    com.example.testapp.material.ExperimentalMaterialNavigationApi::class, ExperimentalMaterial3Api::class
 )
 @Composable
 fun MainScreen() {
@@ -75,17 +89,54 @@ fun MainScreen() {
     ) {
         NavHost(
             navController = rootNavController,
-            startDestination = "route2"
+            startDestination = "route2",
+            enterTransition = { fadeIn(tween(300)) },
+            exitTransition = { fadeOut(tween(300)) }
         ) {
-            composable("route1") {
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center
-                ) {
-                    Text(text = "route1", style = MaterialTheme.typography.titleLarge)
+            composable(
+                route = "route1"
+            ) {
+                Box(modifier = Modifier.fillMaxSize()) {
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center
+                    ) {
+                        CenterAlignedTopAppBar(
+                            title = {
+                                Text(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(horizontal = 16.dp),
+                                    text = "route1",
+                                    style = MaterialTheme.typography.titleLarge,
+                                    textAlign = TextAlign.Center
+                                )
+                            },
+                            navigationIcon = {
+                                IconButton(
+                                    onClick = {
+                                        rootNavController.popBackStack()
+                                    },
+                                ) {
+                                    Icon(imageVector = Rounded.ArrowBack, contentDescription = "")
+                                }
+                            }
+                        )
+
+                        Spacer(modifier = Modifier.height(32.dp))
+
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.Center
+                        ) {
+                            Text(text = "route1", style = MaterialTheme.typography.titleLarge)
+                        }
+                    }
                 }
             }
-            composable("route2") {
+            composable(
+                route = "route2"
+            ) {
                 val scope = rememberCoroutineScope()
                 val drawerState = rememberDrawerState(Closed)
 
@@ -102,10 +153,21 @@ fun MainScreen() {
 
 
                             Column(
+                                modifier = Modifier
+                                    .fillMaxHeight()
+                                    .padding(horizontal = 16.dp),
                                 horizontalAlignment = Alignment.CenterHorizontally,
-                                verticalArrangement = Arrangement.Center
                             ) {
-                                Button(onClick = { rootNavController.navigate("route1") }) {
+                                Spacer(modifier = Modifier.height(16.dp))
+                                Button(
+                                    contentPadding = PaddingValues(32.dp),
+                                    onClick = {
+                                        scope.launch { drawerState.close() }
+                                        rootNavController.navigate("route1") {
+                                            launchSingleTop = true
+                                        }
+                                    }
+                                ) {
                                     Text(text = "Navigate to route1")
                                 }
                             }
@@ -127,8 +189,11 @@ fun MainScreen() {
                             bottomPadding = it,
                             stateHolder = stateHolder,
                             innerNavController = innerNavController,
-                            rootNavController = rootNavController
-                        ) { }
+                            rootNavController = rootNavController,
+                            onDrawerClick = {
+                                scope.launch { drawerState.open() }
+                            }
+                        )
                     }
                 }
             }
