@@ -33,12 +33,14 @@ fun BottomNavigationBar(
     val context = LocalContext.current
 
     val items = remember {
-        mutableStateOf(listOf(
-            Route3,
-            Route4,
-            Route5,
-            Route6
-        ))
+        mutableStateOf(
+            listOf(
+                Route3,
+                Route4,
+                Route5,
+                Route6,
+            ),
+        )
     }
 
     NavigationBar {
@@ -52,7 +54,7 @@ fun BottomNavigationBar(
                 icon = {
                     Icon(
                         imageVector = item.icon,
-                        contentDescription = item.title
+                        contentDescription = item.title,
                     )
                 },
                 label = {
@@ -67,7 +69,7 @@ fun BottomNavigationBar(
                             FontWeight.SemiBold
                         } else {
                             null
-                        }
+                        },
                     )
                 },
                 alwaysShowLabel = true,
@@ -88,7 +90,7 @@ fun BottomNavigationBar(
                         // Restore state when reselecting a previously selected item
                         restoreState = true
                     }
-                }
+                },
             )
         }
     }
@@ -97,10 +99,10 @@ fun BottomNavigationBar(
 sealed class BottomNavigationItem(
     var route: String,
     var icon: ImageVector,
-    var title: String
+    var title: String,
 ) {
-    object Route3 : BottomNavigationItem("route3", Icons.Rounded.AccessAlarm, "Route3")
-    object Route4 : BottomNavigationItem("route4", Icons.Rounded.Apartment, "Route4")
-    object Route5 : BottomNavigationItem("route5", Icons.Rounded.DirectionsBike, "Route5")
-    object Route6 : BottomNavigationItem("route6", Icons.Rounded.Cottage, "Route6")
+    object Route3 : BottomNavigationItem("route3", Icons.Rounded.AccessAlarm, "Screen1")
+    object Route4 : BottomNavigationItem("route4", Icons.Rounded.Apartment, "Screen2")
+    object Route5 : BottomNavigationItem("route5", Icons.Rounded.DirectionsBike, "Screen3")
+    object Route6 : BottomNavigationItem("route6", Icons.Rounded.Cottage, "Screen4")
 }

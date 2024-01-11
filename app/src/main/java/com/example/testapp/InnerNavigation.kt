@@ -16,6 +16,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.itemsIndexed
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons.Rounded
 import androidx.compose.material.icons.rounded.Image
@@ -28,6 +33,8 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -38,6 +45,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
+import kotlin.random.Random
 
 @OptIn(ExperimentalAnimationApi::class, ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @ExperimentalComposeUiApi
@@ -50,23 +58,21 @@ fun InnerNavigation(
     stateHolder: StateHolder,
     innerNavController: NavHostController,
     rootNavController: NavHostController,
-    onDrawerClick: () -> Unit
+    onDrawerClick: () -> Unit,
 ) {
-
     NavHost(
         navController = innerNavController,
         startDestination = "route3",
         enterTransition = { fadeIn(tween(300)) },
-        exitTransition = { fadeOut(tween(300)) }
+        exitTransition = { fadeOut(tween(300)) },
     ) {
-
         composable("route3") {
             Box(modifier = Modifier.fillMaxSize()) {
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(bottomPadding),
-                    horizontalAlignment = Alignment.CenterHorizontally
+                    horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
                     CenterAlignedTopAppBar(
                         title = {
@@ -74,9 +80,9 @@ fun InnerNavigation(
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .padding(horizontal = 16.dp),
-                                text = "route3",
+                                text = "Screen1",
                                 style = MaterialTheme.typography.titleLarge,
-                                textAlign = TextAlign.Center
+                                textAlign = TextAlign.Center,
                             )
                         },
                         navigationIcon = {
@@ -87,7 +93,7 @@ fun InnerNavigation(
                             ) {
                                 Icon(imageVector = Rounded.Menu, contentDescription = "")
                             }
-                        }
+                        },
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     Button(
@@ -97,7 +103,7 @@ fun InnerNavigation(
                                 launchSingleTop = true
                             }
                         },
-                        contentPadding = PaddingValues(32.dp)
+                        contentPadding = PaddingValues(32.dp),
                     ) {
                         Text(text = "Navigate to sheetRoute1", color = Color.White)
                     }
@@ -109,7 +115,7 @@ fun InnerNavigation(
                                 launchSingleTop = true
                             }
                         },
-                        contentPadding = PaddingValues(32.dp)
+                        contentPadding = PaddingValues(32.dp),
                     ) {
                         Text(text = "Navigate to sheetRoute1", color = Color.White)
                     }
@@ -129,9 +135,50 @@ fun InnerNavigation(
                     .fillMaxSize()
                     .padding(bottomPadding),
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
+                verticalArrangement = Arrangement.Center,
             ) {
-                Text(text = "route4", style = MaterialTheme.typography.titleLarge)
+                val items = remember {
+                    mutableStateOf(List(1000) { it })
+                }
+                val pagerState = rememberPagerState(initialPage = 5_000, pageCount = { 10_000 })
+
+                Box(modifier = Modifier.fillMaxSize()) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(bottomPadding),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                    ) {
+                        CenterAlignedTopAppBar(
+                            title = {
+                                Text(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(horizontal = 16.dp),
+                                    text = "Screen2",
+                                    style = MaterialTheme.typography.titleLarge,
+                                    textAlign = TextAlign.Center,
+                                )
+                            },
+                        )
+                        Spacer(modifier = Modifier.height(8.dp))
+                        val page = pagerState.currentPage - 5_000
+                        Text(text = "Page = $page", style = MaterialTheme.typography.titleLarge)
+                        Spacer(modifier = Modifier.height(8.dp))
+                        HorizontalPager(
+                            state = pagerState,
+                        ) {
+                            LazyVerticalGrid(
+                                modifier = Modifier.fillMaxSize(),
+                                columns = GridCells.Fixed(8),
+                            ) {
+                                itemsIndexed(items = items.value) { index, item ->
+                                    Icon(Rounded.Image, contentDescription = "", tint = RandomColor)
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
 
@@ -141,9 +188,9 @@ fun InnerNavigation(
                     .fillMaxSize()
                     .padding(bottomPadding),
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
+                verticalArrangement = Arrangement.Center,
             ) {
-                Text(text = "route5", style = MaterialTheme.typography.titleLarge)
+                Text(text = "Screen3", style = MaterialTheme.typography.titleLarge)
             }
         }
 
@@ -153,12 +200,13 @@ fun InnerNavigation(
                     .fillMaxSize()
                     .padding(bottomPadding),
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
+                verticalArrangement = Arrangement.Center,
             ) {
-                Text(text = "route6", style = MaterialTheme.typography.titleLarge)
+                Text(text = "Screen4", style = MaterialTheme.typography.titleLarge)
             }
         }
-
-
     }
 }
+
+val RandomColor
+    get() = Color(Random.nextInt(256), Random.nextInt(256), Random.nextInt(256))

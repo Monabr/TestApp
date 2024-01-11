@@ -1,8 +1,8 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript {
     ext {
-        kotlin_version = "1.8.22"
-        accompanist_version = '0.31.5-beta'
+        kotlin_version = "1.9.22"
+        accompanist_version = '0.33.2-alpha'
     }
     repositories {
         google()
@@ -11,11 +11,10 @@ buildscript {
         maven { url "https://plugins.gradle.org/m2/" }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:8.0.2'
+        classpath 'com.android.tools.build:gradle:8.2.1'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        classpath "com.google.dagger:hilt-android-gradle-plugin:2.44.2"
+        classpath "com.google.dagger:hilt-android-gradle-plugin:2.50"
         classpath "org.jetbrains.kotlin:kotlin-serialization:$kotlin_version"
-        classpath "de.mannodermaus.gradle.plugins:android-junit5:1.8.2.1"
     }
 }
 
