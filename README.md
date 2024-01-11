@@ -31,7 +31,7 @@ Algorithm:
 2. Hold your finger on the LazyVerticalGrid and try quick scroll vertically up and down remember how it goes.
 3. Scroll horizontally HorizontalPager to -1 page.
 4. Scroll back horizontally HorizontalPager to 0 page.
-5. Hold or finger on the LazyVerticalGrid and try quick scroll vertically up and down see how it's different - there is no scroll at all.
+5. Hold or finger on the LazyVerticalGrid and try quick scroll vertically up and down see how it's different - there is no scroll at all. (Please note: I am actively scrolling vertically in this video! I'm not waiting!)
 6. Try scroll as usual up and down. See there is no more scroll.
 7. Try small scrolls up and down. See that there some scroll left.
 
